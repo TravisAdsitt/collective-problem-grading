@@ -1,0 +1,7 @@
+# No third-party dependencies required for the core pipeline.
+# Standard library only: csv, json, pathlib, dataclasses, logging, argparse.
+
+# Optional — install these if you want PDF parsing or fuzzy name matching:
+# pdfplumber>=0.10       # extract tables from source PDFs
+# rapidfuzz>=3.0         # better entity name matching across sources
+# requests>=2.31         # if you add any HTTP-based ingesters

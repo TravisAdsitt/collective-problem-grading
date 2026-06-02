@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Accountability Ledger</title>
+  <link rel="stylesheet" href="src/style.css">
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <h1>The Accountability Ledger</h1>
+    <p class="subtitle">Documented behavior, not pledges — S&amp;P 500 companies and top U.S. individuals scored across six global-problem domains.</p>
+    <p class="methodology-note">
+      <strong>One rule:</strong> Actions over pledges. Lobbying records, capital allocation, and verified outcomes —
+      not sustainability statements. <a href="#methodology">Methodology &darr;</a>
+    </p>
+  </div>
+</header>
+
+<main>
+  <div class="controls">
+    <input type="search" id="search" placeholder="Search company or individual…" autocomplete="off">
+    <select id="type-filter">
+      <option value="">All types</option>
+      <option value="company">Companies</option>
+      <option value="individual">Individuals</option>
+    </select>
+    <select id="domain-filter">
+      <option value="">All domains</option>
+      <option value="climate">Climate</option>
+      <option value="health">Health / Medicine Access</option>
+      <option value="ai_safety">AI Safety</option>
+      <option value="digital_rights">Digital Rights</option>
+      <option value="labor">Labor &amp; Inequality</option>
+      <option value="tax_governance">Tax &amp; Governance</option>
+    </select>
+    <select id="stance-filter">
+      <option value="">All stances</option>
+      <option value="net_positive">Net positive</option>
+      <option value="mixed">Mixed</option>
+      <option value="net_negative">Net negative</option>
+    </select>
+    <select id="gap-filter">
+      <option value="">Any gap</option>
+      <option value="severe">Severe gap</option>
+      <option value="moderate">Moderate gap</option>
+      <option value="none">No gap</option>
+    </select>
+  </div>
+
+  <div id="count-bar"></div>
+
+  <div id="table-wrapper">
+    <table id="ledger">
+      <thead>
+        <tr>
+          <th class="col-name" data-sort="name">Entity</th>
+          <th class="col-sector" data-sort="sector">Sector</th>
+          <th class="col-domain" data-sort="climate">Climate</th>
+          <th class="col-domain" data-sort="health">Health</th>
+          <th class="col-domain" data-sort="ai_safety">AI Safety</th>
+          <th class="col-domain" data-sort="digital_rights">Digital Rights</th>
+          <th class="col-domain" data-sort="labor">Labor</th>
+          <th class="col-domain" data-sort="tax_governance">Tax &amp; Gov.</th>
+          <th class="col-updated">Updated</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+
+  <div id="detail-panel" class="hidden">
+    <button id="close-panel">&times; Close</button>
+    <div id="detail-content"></div>
+  </div>
+
+  <section id="methodology">
+    <h2>Methodology</h2>
+    <h3>Design principles</h3>
+    <ul>
+      <li><strong>Actions over pledges — always.</strong> Net-zero commitments and safety statements are scored as
+        pledges, not actions. Lobbying records, capital allocation, and verified outcomes determine stance.</li>
+      <li><strong>No blended score.</strong> Domains are kept separate. A firm can be A-grade on climate and
+        terrible on labor — that messiness is the story. Averaging hides it.</li>
+      <li><strong>Tiered data confidence.</strong> Climate data is solid; AI-safety scoring is young; labor and
+        tax are thinner. Each domain's column header shows its confidence tier.</li>
+      <li><strong>Documented behavior only for individuals.</strong> Political donations, tax conduct, foundation
+        payout rates — sourced facts only. Reader draws conclusions.</li>
+    </ul>
+
+    <h3>Domain sources</h3>
+    <table class="source-table">
+      <thead><tr><th>Domain</th><th>Primary sources</th><th>Confidence</th></tr></thead>
+      <tbody>
+        <tr><td>Climate</td><td>InfluenceMap (lobbying), CDP, SBTi</td><td class="conf high">High</td></tr>
+        <tr><td>Health</td><td>Access to Medicine Index</td><td class="conf high">High (pharma only)</td></tr>
+        <tr><td>AI Safety</td><td>FLI AI Safety Index*</td><td class="conf medium">Medium</td></tr>
+        <tr><td>Digital Rights</td><td>Ranking Digital Rights</td><td class="conf medium">Medium</td></tr>
+        <tr><td>Labor</td><td>SEC CEO Pay Ratio, JUST Capital</td><td class="conf low">Low–Medium</td></tr>
+        <tr><td>Tax &amp; Gov.</td><td>Tax Justice Network, OpenSecrets, ProPublica IRS Files</td><td class="conf medium">Medium</td></tr>
+      </tbody>
+    </table>
+
+    <p class="conflict-note">
+      * <strong>Conflict disclosure:</strong> The FLI AI Safety Index currently scores Anthropic highest.
+      Anthropic builds Claude, which assisted in drafting this project. Treat FLI AI Safety scores with
+      appropriate skepticism. Alternative sources (AI Now Institute, Center for AI Safety) are not yet
+      integrated but are noted where relevant.
+    </p>
+
+    <h3>Pledge-vs-action gap</h3>
+    <p>Every domain record carries a <code>pledge_vs_action_gap</code> field:</p>
+    <ul>
+      <li><strong>Severe</strong> — public commitment contradicted by documented action (e.g., net-zero pledge + active climate lobbying against policy).</li>
+      <li><strong>Moderate</strong> — partial follow-through; pledges exceed verified action.</li>
+      <li><strong>None</strong> — actions match or exceed stated commitments.</li>
+      <li><strong>Unknown</strong> — insufficient data to assess.</li>
+    </ul>
+  </section>
+</main>
+
+<footer>
+  <p>Sources: InfluenceMap · CDP · SBTi · Access to Medicine Foundation · FLI · Ranking Digital Rights ·
+    JUST Capital · SEC · OpenSecrets · ProPublica · Tax Justice Network · Forbes 400.</p>
+  <p>Last pipeline run: <span id="last-run">—</span></p>
+</footer>
+
+<script src="src/app.js"></script>
+</body>
+</html>

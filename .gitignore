@@ -1,0 +1,24 @@
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store
+.env
+
+# Raw source data — download locally, do not commit (files can be large)
+data/raw/influencemap/
+data/raw/cdp/
+data/raw/sbti/
+data/raw/access_to_medicine/
+data/raw/fli_ai_safety/
+data/raw/ranking_digital_rights/
+data/raw/just_capital/
+data/raw/sec_ceo_pay/
+data/raw/opensecrets/
+data/raw/propublica_irs/
+data/raw/tax_justice/
+
+# Output — generated, not source-controlled
+data/output/
+
+# Your local entity list (the template is committed; your working copy is not)
+data/entities.csv
