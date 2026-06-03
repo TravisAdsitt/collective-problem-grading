@@ -1,6 +1,12 @@
 """
 OpenSecrets / FEC — lobbying spend and political contributions.
 
+DEPRECATED (2025): The OpenSecrets API was discontinued on 2025-04-15. This
+ingester is no longer wired into the assembler. Federal lobbying now comes from
+the Senate LDA API (pipeline/ingest/senate_lda.py + pipeline/fetch/senate_lda.py).
+Political contributions (PACs / individuals) will move to the FEC API. This file
+is kept only for users who still have legacy OpenSecrets bulk-data CSV exports.
+
 Download: https://www.opensecrets.org/bulk-data (requires free API key or bulk download)
 File to place: data/raw/opensecrets/lobbying.csv and data/raw/opensecrets/contributions.csv
 

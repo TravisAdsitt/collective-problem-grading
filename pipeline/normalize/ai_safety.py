@@ -57,15 +57,21 @@ def normalize(fli_record: dict | None) -> DomainScore:
                 as_of=fli_record.get("as_of", ""),
             ))
 
-    notes = ""
+    # Surface the conflict disclosure in the record itself (not just README/frontend)
+    # so it travels with Anthropic's AI-safety evidence wherever the data is consumed.
     company = fli_record.get("name", "")
     if "anthropic" in company.lower():
-        notes = _CONFLICT_NOTE
+        evidence.append(make_evidence(
+            source="FLI AI Safety Index",
+            metric="Conflict disclosure",
+            value=_CONFLICT_NOTE,
+            url=fli_record.get("url", "https://aisafetyindex.net/"),
+            as_of=fli_record.get("as_of", ""),
+        ))
 
-    score = DomainScore(
+    return DomainScore(
         stance=stance,
         confidence="medium",
         pledge_vs_action_gap="unknown",
         evidence=evidence,
     )
-    return score

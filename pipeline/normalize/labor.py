@@ -47,9 +47,17 @@ def _ratio_to_stance(ratio_str: str) -> Stance:
 
 
 def _worse_stance(a: Stance, b: Stance) -> Stance:
-    order = ["net_positive", "mixed", "net_negative", "unrated"]
-    ai, bi = (order.index(s) if s in order else 3 for s in (a, b))
-    return order[max(ai, bi)]
+    """Worse (more negative) of two stances, ignoring 'unrated'.
+
+    'unrated' means "no signal from this source", not "bad" — so a single rated
+    source still produces a stance. Only when neither source rates the entity do
+    we fall back to 'unrated'.
+    """
+    severity = {"net_positive": 0, "mixed": 1, "net_negative": 2}
+    rated = [s for s in (a, b) if s in severity]
+    if not rated:
+        return "unrated"
+    return max(rated, key=lambda s: severity[s])
 
 
 def normalize(ceo_pay_record: dict | None, just_record: dict | None) -> DomainScore:

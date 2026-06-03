@@ -24,9 +24,11 @@ cp data/entities_template.csv data/entities.csv
 # 3. Run the pipeline
 python -m pipeline.run
 
-# 4. Open the frontend
-open frontend/index.html   # macOS
-# or just open the file in any browser
+# 4. Serve the frontend over HTTP (NOT file://)
+#    Browsers block fetch() of local files, so opening index.html directly
+#    will show an empty table. Run a static server from the repo root:
+python -m http.server 8000
+# then open http://localhost:8000/frontend/index.html
 ```
 
 ---
@@ -46,16 +48,20 @@ pipeline/
     ranking_digital_rights.py
     just_capital.py
     sec_ceo_pay.py
-    opensecrets.py
+    senate_lda.py    — federal lobbying spend (replaces discontinued OpenSecrets API)
+    opensecrets.py   — DEPRECATED (OpenSecrets API shut down 2025-04-15)
     propublica_irs.py
     tax_justice.py
+  fetch/             — LOCAL network fetchers that write data/raw/<source>/*.csv
+    senate_lda.py    — pulls lobbying totals from the Senate LDA API (no key)
+    http.py          — stdlib GET-JSON helper
   normalize/         — maps raw source values → common stance/confidence/gap
     climate.py       — InfluenceMap primary; CDP + SBTi secondary
     health.py        — Access to Medicine Index
     ai_safety.py     — FLI AI Safety Index (conflict disclosed)
     digital_rights.py — Ranking Digital Rights
     labor.py         — CEO pay ratio + JUST Capital
-    tax_governance.py — Tax Justice Network + OpenSecrets + ProPublica
+    tax_governance.py — Tax Justice Network + Senate LDA lobbying + ProPublica
   assemble/
     matcher.py       — entity matching by ticker then normalized name
     assembler.py     — runs all ingesters + normalizers → EntityRecord list
@@ -124,7 +130,7 @@ Every `stance` traces to at least one `evidence` item.
 | AI Safety | FLI AI Safety Index* | **Medium** |
 | Digital Rights | Ranking Digital Rights | **Medium** |
 | Labor | SEC CEO Pay Ratio, JUST Capital | **Low–Medium** |
-| Tax & Governance | Tax Justice Network, OpenSecrets, ProPublica IRS Files | **Medium** |
+| Tax & Governance | Tax Justice Network, U.S. Senate LDA (lobbying), ProPublica IRS Files | **Medium** |
 
 \* **Conflict disclosure:** Anthropic scores highest in the FLI AI Safety Index.
 Anthropic builds Claude, which assisted in building this project. Treat AI safety

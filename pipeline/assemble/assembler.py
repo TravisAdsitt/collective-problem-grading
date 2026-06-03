@@ -25,7 +25,7 @@ from pipeline.ingest.fli_ai_safety import FLIAISafetyIngester
 from pipeline.ingest.ranking_digital_rights import RankingDigitalRightsIngester
 from pipeline.ingest.just_capital import JUSTCapitalIngester
 from pipeline.ingest.sec_ceo_pay import SEOCeoPayIngester
-from pipeline.ingest.opensecrets import OpenSecretsIngester
+from pipeline.ingest.senate_lda import SenateLDAIngester
 from pipeline.ingest.propublica_irs import ProPublicaIRSIngester
 from pipeline.ingest.tax_justice import TaxJusticeIngester
 
@@ -66,9 +66,7 @@ class Assembler:
             "rdr": idx(RankingDigitalRightsIngester),
             "just_capital": idx(JUSTCapitalIngester),
             "sec_ceo_pay": idx(SEOCeoPayIngester),
-            "opensecrets_lobbying": SourceIndex(
-                [r for r in OpenSecretsIngester(self.raw_dir).ingest() if r.get("data_type") == "lobbying"]
-            ),
+            "senate_lda": idx(SenateLDAIngester),
             "propublica": SourceIndex(
                 list(ProPublicaIRSIngester(self.raw_dir).ingest()),
                 ticker_field="",
@@ -77,11 +75,17 @@ class Assembler:
             "tax_justice": idx(TaxJusticeIngester),
         }
 
+    @staticmethod
+    def _aliases(entity: dict) -> list[str]:
+        """Parse the optional semicolon-separated `aliases` column."""
+        return [a.strip() for a in entity.get("aliases", "").split(";") if a.strip()]
+
     def _score_company(self, entity: dict, idx: dict[str, SourceIndex]) -> dict[str, DomainScore]:
         ticker, name = entity["ticker"], entity["name"]
+        aliases = self._aliases(entity)
 
         def get(source_key: str) -> dict | None:
-            return idx[source_key].lookup(ticker, name)
+            return idx[source_key].lookup(ticker, name, aliases)
 
         climate = norm_climate.normalize(
             im_record=get("influencemap"),
@@ -97,7 +101,7 @@ class Assembler:
         )
         tax = norm_tax.normalize_company(
             tax_justice_record=get("tax_justice"),
-            opensecrets_record=get("opensecrets_lobbying"),
+            lobbying_record=get("senate_lda"),
         )
 
         return {
@@ -111,9 +115,10 @@ class Assembler:
 
     def _score_individual(self, entity: dict, idx: dict[str, SourceIndex]) -> dict[str, DomainScore]:
         name = entity["name"]
+        aliases = self._aliases(entity)
 
         def get(source_key: str) -> dict | None:
-            return idx[source_key].lookup("", name)
+            return idx[source_key].lookup("", name, aliases)
 
         tax = norm_tax.normalize_individual(get("propublica"))
 

@@ -1,22 +1,22 @@
-entity_id,name,type,ticker,sector,notes
-AAPL,Apple Inc.,company,AAPL,Technology,
-MSFT,Microsoft Corporation,company,MSFT,Technology,
-AMZN,Amazon.com Inc.,company,AMZN,Consumer Discretionary,
-GOOGL,Alphabet Inc.,company,GOOGL,Communication Services,"Scored in FLI AI Safety Index as Google DeepMind"
-META,Meta Platforms Inc.,company,META,Communication Services,"Scored in FLI AI Safety Index as Meta AI"
-XOM,Exxon Mobil Corporation,company,XOM,Energy,
-CVX,Chevron Corporation,company,CVX,Energy,
-JNJ,Johnson & Johnson,company,JNJ,Health Care,
-NVS,Novartis AG,company,NVS,Health Care,"#1 Access to Medicine Index 2024"
-GSK,GSK plc,company,GSK,Health Care,"#2 Access to Medicine Index 2024"
-JPM,JPMorgan Chase & Co.,company,JPM,Financials,
-BAC,Bank of America Corp.,company,BAC,Financials,
-WMT,Walmart Inc.,company,WMT,Consumer Staples,
-elon-musk,Elon Musk,individual,,,"Owner of xAI; also scored in FLI AI Safety Index via xAI"
-jeff-bezos,Jeff Bezos,individual,,,
-bill-gates,Bill Gates,individual,,,"Bill & Melinda Gates Foundation payout rate highly relevant"
-warren-buffett,Warren Buffett,individual,,,
-larry-ellison,Larry Ellison,individual,,,
-mark-zuckerberg,Mark Zuckerberg,individual,,,
-larry-page,Larry Page,individual,,,
-sergey-brin,Sergey Brin,individual,,,
+entity_id,name,type,ticker,sector,aliases,notes
+AAPL,Apple Inc.,company,AAPL,Technology,,
+MSFT,Microsoft Corporation,company,MSFT,Technology,,
+AMZN,Amazon.com Inc.,company,AMZN,Consumer Discretionary,Amazon,"FLI AI Safety Index lists as 'Amazon'"
+GOOGL,Alphabet Inc.,company,GOOGL,Communication Services,Google DeepMind;Google,"FLI lists as Google DeepMind; lobbies as Google Client Services"
+META,Meta Platforms Inc.,company,META,Communication Services,Meta AI,"Scored in FLI AI Safety Index as Meta AI"
+XOM,Exxon Mobil Corporation,company,XOM,Energy,ExxonMobil,"Lobbies under both 'Exxon Mobil' and 'ExxonMobil' spellings"
+CVX,Chevron Corporation,company,CVX,Energy,,
+JNJ,Johnson & Johnson,company,JNJ,Health Care,,
+NVS,Novartis AG,company,NVS,Health Care,,"#1 Access to Medicine Index 2024"
+GSK,GSK plc,company,GSK,Health Care,,"#2 Access to Medicine Index 2024"
+JPM,JPMorgan Chase & Co.,company,JPM,Financials,,
+BAC,Bank of America Corp.,company,BAC,Financials,,
+WMT,Walmart Inc.,company,WMT,Consumer Staples,,
+elon-musk,Elon Musk,individual,,,,"Owner of xAI; also scored in FLI AI Safety Index via xAI"
+jeff-bezos,Jeff Bezos,individual,,,,
+bill-gates,Bill Gates,individual,,,,"Bill & Melinda Gates Foundation payout rate highly relevant"
+warren-buffett,Warren Buffett,individual,,,,
+larry-ellison,Larry Ellison,individual,,,,
+mark-zuckerberg,Mark Zuckerberg,individual,,,,
+larry-page,Larry Page,individual,,,,
+sergey-brin,Sergey Brin,individual,,,,

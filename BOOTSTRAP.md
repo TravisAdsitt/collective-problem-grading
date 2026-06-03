@@ -93,13 +93,28 @@ Do these first; they're clean CSV downloads with no friction:
 - **Status:** `[ ]` not yet downloaded
 - **Follow-up needed:** Download AFL-CIO Paywatch spreadsheet, map columns
 
-### OpenSecrets / FEC (lobbying + PAC contributions)
-- **Files:** `data/raw/opensecrets/lobbying.csv`, `data/raw/opensecrets/contributions.csv`
-- **Access:** Free API key at https://www.opensecrets.org/api/admin/index.php
-  Once you have a key, Claude can write an HTTP ingester that calls the API
-  directly instead of reading a local CSV.
-- **Status:** `[ ]` not yet set up
-- **Follow-up needed:** Get API key → Claude adds HTTP ingester
+### Federal lobbying — Senate LDA (replaces OpenSecrets)
+- **File:** `data/raw/senate_lda/lobbying.csv`
+- **⚠️ OpenSecrets API discontinued 2025-04-15.** It was only ever a roll-up of
+  primary federal filings, so we now pull straight from the source.
+- **Access:** Senate LDA API — **no key required** (register for a key only to
+  raise rate limits, then set `LDA_API_KEY`). Just run the fetcher:
+  ```
+  python3 -m pipeline.fetch.senate_lda --year 2024
+  ```
+  It reads your `data/entities.csv`, aggregates each company's annual lobbying
+  spend (filtering by token-prefix on name + `aliases` to exclude false hits),
+  and writes the CSV the ingester reads.
+- **Status:** `[x]` working — fetcher built and verified against 2024 data.
+- **Follow-up needed:** For new entities, check the log: a $0/0-filings result
+  means the company lobbies under a different name — add it to the `aliases`
+  column (e.g. Alphabet → `Google`, Exxon → `ExxonMobil`).
+
+### PAC + individual political contributions — FEC (not yet wired)
+- **Access:** FEC API at https://api.open.fec.gov — free key (or `DEMO_KEY` for
+  testing). This is the other half of what OpenSecrets used to provide.
+- **Status:** `[ ]` reachability confirmed; fetcher not yet built.
+- **Follow-up needed:** Ask Claude to "add the FEC contributions fetcher."
 
 ### ProPublica IRS Files (individuals — tax rates)
 - **File:** `data/raw/propublica_irs/individuals.csv`

@@ -38,8 +38,10 @@ async function loadData() {
   } catch (e) {
     document.getElementById("tbody").innerHTML =
       `<tr><td colspan="9" style="color:#e05050;padding:1.5rem;">
-        Could not load ledger.json — run the pipeline first:<br>
-        <code>python -m pipeline.run</code>
+        Could not load <code>data/output/ledger.json</code>.<br><br>
+        1. Generate it: <code>python -m pipeline.run</code><br>
+        2. Serve over HTTP (not file://): <code>python -m http.server 8000</code><br>
+        &nbsp;&nbsp;&nbsp;then open <code>http://localhost:8000/frontend/index.html</code>
       </td></tr>`;
     console.error(e);
     return;
@@ -150,7 +152,9 @@ function openDetail(record) {
 
   const domainBlocks = DOMAINS.map(({ key, label }) => {
     const d = record.domains?.[key];
-    if (!d || d.stance === "unrated") return `
+    // Unrated AND no evidence: nothing to show. Unrated WITH evidence (e.g.
+    // lobbying spend with no directional stance) still renders the evidence.
+    if (!d || (d.stance === "unrated" && !(d.evidence?.length))) return `
       <div class="domain-block">
         <h3>${label} <span class="conf-badge conf-${d?.confidence ?? "low"}">unrated</span></h3>
         <span class="stance stance-unrated">—</span>

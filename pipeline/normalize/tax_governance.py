@@ -63,9 +63,9 @@ def _individual_gap(payout_rate: float | None) -> Gap:
 
 def normalize_company(
     tax_justice_record: dict | None,
-    opensecrets_record: dict | None,
+    lobbying_record: dict | None,
 ) -> DomainScore:
-    if not tax_justice_record and not opensecrets_record:
+    if not tax_justice_record and not lobbying_record:
         return DomainScore.unrated()
 
     evidence = []
@@ -93,18 +93,24 @@ def normalize_company(
                 as_of=tax_justice_record.get("as_of", ""),
             ))
 
-    if opensecrets_record:
-        lobbying = opensecrets_record.get("total_lobbying_usd", "")
-        if lobbying:
+    if lobbying_record:
+        lobbying = _safe_float(lobbying_record.get("total_lobbying_usd", ""))
+        if lobbying is not None:
             evidence.append(make_evidence(
-                source="OpenSecrets / FEC",
-                metric="Total Lobbying Spend",
-                value=f"${lobbying}",
-                url=opensecrets_record.get("url", "https://www.opensecrets.org"),
-                as_of=opensecrets_record.get("as_of", ""),
+                source=lobbying_record.get("source", "U.S. Senate (LDA)"),
+                metric="Federal Lobbying Spend",
+                value=f"${lobbying:,.0f}",
+                url=lobbying_record.get("url", "https://lda.senate.gov"),
+                as_of=lobbying_record.get("as_of", ""),
             ))
 
+    # Lobbying spend is a documented fact, not a directional judgment, so it
+    # never sets a stance on its own — but it must still surface as evidence
+    # rather than being discarded when Tax Justice has no haven score.
     if stance == "unrated":
+        if evidence:
+            return DomainScore(stance="unrated", confidence="low",
+                               pledge_vs_action_gap="unknown", evidence=evidence)
         return DomainScore.unrated()
 
     return DomainScore(
